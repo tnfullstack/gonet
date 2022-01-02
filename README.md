@@ -1,2 +1,2 @@
-# Network Programming
-Network Programming with Go
+# Distributed Services 
+Building Distributed Services with Go

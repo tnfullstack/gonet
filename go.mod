@@ -1,3 +1,3 @@
-module gonet
+module godms
 
 go 1.17
