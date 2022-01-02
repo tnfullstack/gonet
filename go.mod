@@ -1,3 +1,3 @@
-module github.com/tnfullstack/gonet
+module gonet
 
 go 1.17
