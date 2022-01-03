@@ -1,31 +1,36 @@
 package server
 
+import (
+	"fmt"
+	"sync"
+)
+
 // Log struct
 type Log struct {
-	mu sync.Mutex
-	records []record
+	mu      sync.Mutex
+	records []Record
 }
 
 // Record struct
 type Record struct {
-	Value []byte `json:"value"`	
+	Value  []byte `json:"value"`
 	Offset uint64 `json:"offset"`
 }
 
-// Error message 
+// Error message
 var ErrOffsetNotFound = fmt.Errorf("offset not found")
 
 // NewLog
-func NewLog() *Log{
-	return *Log{}
+func NewLog() *Log {
+	return &Log{}
 }
 
-// Append 
-func (c *Log) Append(r Record) (Uint64, error) {
+// Append
+func (c *Log) Append(r Record) (uint64, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	r.Offset = Uint64(len(c.records))
+	r.Offset = uint64(len(c.records))
 	c.records = append(c.records, r)
 
 	return r.Offset, nil
@@ -37,8 +42,7 @@ func (c *Log) Read(o uint64) (Record, error) {
 	defer c.mu.Unlock()
 
 	if o > uint64(len(c.records)) {
-		return Record{}, ErrOffsetNotFound 
+		return Record{}, ErrOffsetNotFound
 	}
 	return c.records[o], nil
 }
-

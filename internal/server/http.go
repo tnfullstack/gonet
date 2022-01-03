@@ -29,54 +29,54 @@ type ConsumeReponse struct {
 
 // NewHTTPServer
 func NewHTTPServer(addr string) *http.Server {
-	httpSrv := NewHTTPServer()
+	httpSrv := newHTTPServer()
 
-	r = mux.NewRouter() 
+	r := mux.NewRouter()
 	r.HandleFunc("/", httpSrv.handleProduce).Methods("POST")
 	r.HandleFunc("/", httpSrv.handleConsume).Methods("GET")
-	
+
 	return &http.Server{
-		Addr: addr,
+		Addr:    addr,
 		Handler: r,
 	}
 }
 
 // newHttpServer
-func NewHTTPServer() *http.Server {
+func newHTTPServer() *httpServer {
 	return &httpServer{
 		Log: NewLog(),
 	}
 }
 
-// handleProduce 
-func (s *httpServer) handleProduce(w, http.ResponseWriter, r *http.Request ) {
+// handleProduce
+func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
 	var req ProduceRequest
 
-	err := json.NewRecorder(r.Body).Decode(&req)
+	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	}
-	return
-
-	off, err := s.Log.Append(req.Record)
-	if err != nil {
-		http.Error(w err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	res := ResponseProduce{
-		Offset: off
+	off, err := s.Log.Append(req.Record)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res := ProduceResponse{
+		Offset: off,
 	}
 
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		http.Error(w err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
 // handleResponse
-func (s *http.Server) handleConsume(w http.ResponseWriter, r *http.Request) {
+func (s *httpServer) handleConsume(w http.ResponseWriter, r *http.Request) {
 	var req ConsumeRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
@@ -107,4 +107,3 @@ func (s *http.Server) handleConsume(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-

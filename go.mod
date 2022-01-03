@@ -1,4 +1,4 @@
-module github.com/tvn9/gdms
+module godms
 
 go 1.17
 
