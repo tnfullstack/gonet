@@ -1,3 +1,5 @@
-module godms
+module github.com/tvn9/gdms
 
 go 1.17
+
+require github.com/gorilla/mux v1.8.0 // indirect

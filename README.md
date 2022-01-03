@@ -1,2 +1,2 @@
-# Distributed Services 
-Building Distributed Services with Go
+# Distributed Micro Services 
+Building Distributed Micro Services with Go
