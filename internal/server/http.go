@@ -24,7 +24,7 @@ type WriteLogResponse struct {
 
 // ReadLogRequest
 type ReadLogRequest struct {
-	Offset uint64 `json:"offseet"`
+	Offset uint64 `json:"offset"`
 }
 
 // ReadLogReponse
@@ -37,8 +37,8 @@ func NewHTTPServer(addr string) *http.Server {
 	httpSrv := newHTTPServer()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", httpSrv.handleProduce).Methods("POST")
-	r.HandleFunc("/", httpSrv.handleConsume).Methods("GET")
+	r.HandleFunc("/", httpSrv.handleWriteLog).Methods("POST")
+	r.HandleFunc("/", httpSrv.handleReadLog).Methods("GET")
 
 	return &http.Server{
 		Addr:    addr,
@@ -54,7 +54,7 @@ func newHTTPServer() *httpServer {
 }
 
 // handleProduce
-func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
+func (s *httpServer) handleWriteLog(w http.ResponseWriter, r *http.Request) {
 	var req WriteLogRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
@@ -81,11 +81,10 @@ func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleResponse
-func (s *httpServer) handleConsume(w http.ResponseWriter, r *http.Request) {
+func (s *httpServer) handleReadLog(w http.ResponseWriter, r *http.Request) {
 	var req ReadLogRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
