@@ -26,23 +26,23 @@ func NewLog() *Log {
 }
 
 // Append
-func (c *Log) Append(r Record) (uint64, error) {
+func (c *Log) Append(record Record) (uint64, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	r.Offset = uint64(len(c.records))
-	c.records = append(c.records, r)
+	record.Offset = uint64(len(c.records))
+	c.records = append(c.records, record)
 
-	return r.Offset, nil
+	return record.Offset, nil
 }
 
 // Read
-func (c *Log) Read(o uint64) (Record, error) {
+func (c *Log) Read(offset uint64) (Record, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if o > uint64(len(c.records)) {
+	if offset >= uint64(len(c.records)) {
 		return Record{}, ErrOffsetNotFound
 	}
-	return c.records[o], nil
+	return c.records[offset], nil
 }

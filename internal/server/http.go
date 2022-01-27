@@ -7,23 +7,28 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// httpServer
 type httpServer struct {
 	Log *Log
 }
 
-type ProduceRequest struct {
+// WriteLogRequest
+type WriteLogRequest struct {
 	Record Record `json:"record"`
 }
 
-type ProduceResponse struct {
+// WriteLogResponse
+type WriteLogResponse struct {
 	Offset uint64 `json:"offseet"`
 }
 
-type ConsumeRequest struct {
+// ReadLogRequest
+type ReadLogRequest struct {
 	Offset uint64 `json:"offseet"`
 }
 
-type ConsumeReponse struct {
+// ReadLogReponse
+type ReadLogReponse struct {
 	Record Record `json:"record"`
 }
 
@@ -50,7 +55,7 @@ func newHTTPServer() *httpServer {
 
 // handleProduce
 func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
-	var req ProduceRequest
+	var req WriteLogRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -64,7 +69,7 @@ func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := ProduceResponse{
+	res := WriteLogResponse{
 		Offset: off,
 	}
 
@@ -77,7 +82,7 @@ func (s *httpServer) handleProduce(w http.ResponseWriter, r *http.Request) {
 
 // handleResponse
 func (s *httpServer) handleConsume(w http.ResponseWriter, r *http.Request) {
-	var req ConsumeRequest
+	var req ReadLogRequest
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 
@@ -97,7 +102,7 @@ func (s *httpServer) handleConsume(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := ConsumeReponse{
+	res := ReadLogReponse{
 		Record: record,
 	}
 
