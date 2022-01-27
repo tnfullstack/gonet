@@ -1,4 +1,4 @@
-module godms
+module dms
 
 go 1.17
 

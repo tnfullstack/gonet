@@ -1,7 +1,7 @@
 package main
 
 import (
-	"godms/internal/server"
+	"dms/internal/server"
 	"log"
 )
 
